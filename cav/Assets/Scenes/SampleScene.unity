@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 151.4, y: 1, z: -142.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -523,7 +523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CaveMeshBuilder
   _meshBuilder: {fileID: 0}
-  size: 100
+  size: 200
   overcrowed: 500
   undercrowed: 10
   iterations: 4
@@ -605,6 +605,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1865501595}
   - component: {fileID: 1865501594}
+  - component: {fileID: 1865501596}
   m_Layer: 0
   m_Name: WorldGenerator
   m_TagString: Untagged
@@ -625,8 +626,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldGenerator
   cave: {fileID: 469077389}
-  valueForBloc: 0
+  valueForBloc: 22
+  VoxelCompute: {fileID: 1865501596}
   chunkPrefab: {fileID: -8076440732011986356, guid: 40fad86bb612ec94c82faf9042c56c0b, type: 3}
+  iterations: 4
 --- !u!4 &1865501595
 Transform:
   m_ObjectHideFlags: 0
@@ -642,6 +645,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1865501596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865501593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 025c6427addf9c14c838c1d5f3d7bae9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoxelComputeRunner
+  shader: {fileID: 7200000, guid: 0b04bfbdd1e0df64896c8280252fe298, type: 3}
+  size: 200
+  iterations: 4
+  valueForBloc: 22
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

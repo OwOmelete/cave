@@ -46,6 +46,86 @@ public class MeshBuilder : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
+    public void BuildGreedyMesh(int[,,] grid)
+    {
+        this.grid = grid;
+        vertices.Clear();
+        triangles.Clear();
+        normals.Clear();
+        
+        int nx = grid.GetLength(0);
+        int ny = grid.GetLength(1);
+        int nz = grid.GetLength(2);
+
+        for (int z = 0; z < nz; z++)
+        {
+            bool[,] mask = new bool[nx, ny];
+            for(int x = 0; x < nx; x++)
+            for (int y = 0; y < ny; y++)
+            {
+                bool current = grid[x, y, z] > valueForBloc;
+                bool behind = (z == nz - 1) ? false : grid[x, y, z + 1] > valueForBloc;
+                mask[x, y] = current && !behind;
+            }
+            
+            for (int y = 0; y < ny; y++)
+            for (int x = 0; x < nx; x++)
+            {
+                if (!mask[x, y]) continue;
+
+                int width = 1;
+                while (x + width < nx && mask[x + width, y]) width++;
+
+                int height = 1;
+                bool done = false;
+                while (y + height < ny && !done)
+                {
+                    for (int i = 0; i < width; i++)
+                    {
+                        if (!mask[x + i, y + height])
+                        {
+                            done = true;
+                            break;
+                        }
+                    }
+
+                    if (!done) height++;
+                    
+                    AddQuad(new Vector3(x,y,z), width, height, Vector3.forward);
+                    
+                    for (int i = 0; i < width; i++)
+                    for (int j = 0; j < height; j++)
+                        mask[x + i, y + j] = false;
+                }
+            }
+        }
+        mesh.Clear();
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.normals = normals.ToArray();
+        mesh.RecalculateBounds();
+    }
+    
+    void AddQuad(Vector3 pos, int width, int height, Vector3 normal)
+    {
+        int vCount = vertices.Count;
+        
+        vertices.Add(pos);
+        vertices.Add(pos + new Vector3(width, 0, 0));
+        vertices.Add(pos + new Vector3(width, height, 0));
+        vertices.Add(pos + new Vector3(0, height, 0));
+        
+        for (int i = 0; i < 4; i++) normals.Add(normal);
+        
+        triangles.Add(vCount + 0);
+        triangles.Add(vCount + 1);
+        triangles.Add(vCount + 2);
+
+        triangles.Add(vCount + 0);
+        triangles.Add(vCount + 2);
+        triangles.Add(vCount + 3);
+    }
+
     public void BuildMesh(int[,,] grid)
     {
         this.grid = grid;

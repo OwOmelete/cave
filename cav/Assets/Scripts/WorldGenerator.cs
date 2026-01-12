@@ -9,6 +9,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private CaveMeshBuilder cave;
     [SerializeField] private int valueForBloc;
 
+    public VoxelComputeRunner VoxelCompute;
     public Chunks chunkPrefab;
     public int iterations = 4;
 
@@ -17,7 +18,7 @@ public class WorldGenerator : MonoBehaviour
     private void Start()
     {
         valueForBloc = cave.valueForBloc;
-        GenerateWorldGrid();
+        VoxelCompute.Generate();
         StartCoroutine(GenerateChunks());
     }
 
@@ -36,7 +37,7 @@ public class WorldGenerator : MonoBehaviour
     IEnumerator GenerateChunks()
     {
         int chunkSize = chunkPrefab.size;
-        int chunksPerAxis = Mathf.CeilToInt((float)cave.size / chunkPrefab.size);
+        int chunksPerAxis = VoxelCompute.size / chunkSize;
         
         for (int x = 0; x < chunksPerAxis; x++)
         for (int y = 0; y < chunksPerAxis; y++)
@@ -49,11 +50,7 @@ public class WorldGenerator : MonoBehaviour
                 transform);
             
             chunks.valueForBloc = valueForBloc;
-            chunks.Init(worldGrid, new Vector3Int(x,y,z));
-            
-            chunks.ApplyAutomata(iterations);
-            
-            chunks.BuildMesh();
+            chunks.Init(VoxelCompute, new Vector3Int(x,y,z), chunkSize);
             
             yield return null;
         }

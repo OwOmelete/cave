@@ -18,8 +18,10 @@ public class Chunks : MonoBehaviour
         builder = GetComponent<MeshBuilder>();
     }
 
-    public void Init(int[,,] worldGrid, Vector3Int coord)
+    public void Init(VoxelComputeRunner world, Vector3Int coord, int size)
     {
+        int[,,] localGrid = new int[size, size, size];
+        this.size = size;
         chunkCoord = coord;
 
         int paddedSize = size + 2 * padding;
@@ -33,18 +35,11 @@ public class Chunks : MonoBehaviour
             int wy = coord.y * size + y - padding;
             int wz = coord.z * size + z - padding;
             
-            if (wx >= 0 && wy >= 0 && wz >= 0 &&
-                wx < worldGrid.GetLength(0) &&
-                wy < worldGrid.GetLength(1) &&
-                wz < worldGrid.GetLength(2))
-            {
-                grid[x, y, z] = worldGrid[wx, wy, wz];
-            }
-            else
-            {
-                grid[x, y, z] = -1;
-            }
+            grid[x, y, z] = world.Get(wx, wy, wz);
         }
+
+        builder.valueForBloc = world.valueForBloc;
+        builder.BuildMesh(grid);
     }
     
     public void ApplyAutomata(int iterations)

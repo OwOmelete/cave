@@ -1,0 +1,44 @@
+#pragma kernel CSMain
+
+RWStructuredBuffer<int> inputGrid;
+RWStructuredBuffer<int> outputGrid;
+
+int size;
+
+
+
+int CountNeighbors(uint3 id)
+{
+    int sum = 0;
+    int count = 0;
+
+    for (int dx=-1; dx <= 1; dx++)
+        for (int dy=-1; dy <= 1; dy++)
+            for (int dz=-1; dz <= 1; dz++)
+            {
+                if (dx==0 && dy==0 && dz==0) continue;
+
+                int3 n = int3(id) + int3(dx,dy,dz);
+
+                if (n.x<0||n.y<0||n.z<0||n.x>=size||n.y>=size||n.z>=size)
+                    continue;
+                
+                
+                int idx = n.x + n.y * size + n.z * size * size;
+                sum += inputGrid[idx];
+                count ++;
+            }
+    return sum / count;
+}
+
+[numthreads(8,8,8)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= size || id.y >= size || id.z >= size)
+        return;
+
+    int index = id.x + id.y * size + id.z * size * size;
+
+    outputGrid[index] = CountNeighbors(id);
+}
+

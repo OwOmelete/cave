@@ -116,5 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2ffd21021746843873bb9d032ec84e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunks
-  size: 16
+  size: 24
+  padding: 1
+  chunkCoord: {x: 0, y: 0, z: 0}
   valueForBloc: 0
