@@ -20,7 +20,6 @@ public class Chunks : MonoBehaviour
 
     public void Init(VoxelComputeRunner world, Vector3Int coord, int size)
     {
-        int[,,] localGrid = new int[size, size, size];
         this.size = size;
         chunkCoord = coord;
 
@@ -39,7 +38,9 @@ public class Chunks : MonoBehaviour
         }
 
         builder.valueForBloc = world.valueForBloc;
-        builder.BuildMesh(grid);
+        builder.padding = padding;
+        builder.size = size;
+        builder.BuildGreedyMesh(grid);
     }
     
     public void ApplyAutomata(int iterations)

@@ -658,7 +658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VoxelComputeRunner
   shader: {fileID: 7200000, guid: 0b04bfbdd1e0df64896c8280252fe298, type: 3}
-  size: 100
+  size: 200
   iterations: 4
   valueForBloc: 22
 --- !u!1660057539 &9223372036854775807
